@@ -1,20 +1,22 @@
 import os
 from fastapi import FastAPI
 from pymongo import MongoClient
+from fastapi.staticfiles import StaticFiles
 
 from api.routes.users_route import users_router
 
 app = FastAPI()
 app.include_router(users_router)
+app.mount("/data", StaticFiles(directory="data"), name="data")
 
 dbHost = os.environ.get('DB_HOST')
 dbPort = os.environ.get('DB_PORT')
 dbName = os.environ.get('DB_NAME')
-CONNECTION_STRING = f"mongodb://{dbHost}:{dbPort}/{dbName}"
+# CONNECTION_STRING = f"mongodb://{dbHost}:{dbPort}/{dbName}"
 
-# Create a connection using MongoClient. You can import MongoClient or use pymongo.MongoClient
-client = MongoClient(CONNECTION_STRING)
-print(client.server_info())
+# # Create a connection using MongoClient. You can import MongoClient or use pymongo.MongoClient
+# client = MongoClient(CONNECTION_STRING)
+# print(client.server_info())
 
 @app.get("/")
 async def read_root():

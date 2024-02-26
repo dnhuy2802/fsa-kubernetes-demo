@@ -1,4 +1,5 @@
 import os
+import uuid
 from fastapi import APIRouter, File, UploadFile, Form, Depends, Body
 
 from api.models.users_model import Users
@@ -23,7 +24,8 @@ async def add_users(name: str = Form(...), email: str = Form(...), upload_img: U
     if not os.path.exists(IMAGEDIR):
         os.makedirs(IMAGEDIR)
     # print image name
-    img_path = f"{IMAGEDIR}/{upload_img.filename}"
+    img_name = f"{uuid.uuid4()}.jpg"
+    img_path = f"{IMAGEDIR}/{img_name}"
     content = await upload_img.read()
     with open(img_path, "wb") as f:
         f.write(content)
@@ -49,7 +51,8 @@ async def update_users(id: str, name: str = Form(...), email: str = Form(...), u
         img_path = user["image"]
         os.remove(img_path)
         # add new image
-        img_path = f"{IMAGEDIR}/{upload_img.filename}"
+        img_name = f"{uuid.uuid4()}.jpg"
+        img_path = f"{IMAGEDIR}/{img_name}"
         content = await upload_img.read()
         with open(img_path, "wb") as f:
             f.write(content)
