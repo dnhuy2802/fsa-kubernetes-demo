@@ -1,11 +1,17 @@
+# Sử dụng image chứa Python
 FROM python:3.11.7-alpine3.19
 
-WORKDIR /code
+# Thiết lập thư mục làm việc
+WORKDIR /app
 
-COPY ./requirements.txt /code/requirements.txt
-
-RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
-
+# Sao chép tất cả các file trong thư mục hiện tại vào thư mục /app trong container
 COPY . .
 
-# CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Cài đặt các dependencies từ requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Expose cổng 8501 để truy cập ứng dụng Streamlit
+EXPOSE 8501
+
+# Khởi chạy ứng dụng Streamlit
+CMD ["streamlit", "run", "app.py"]
