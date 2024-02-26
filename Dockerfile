@@ -1,5 +1,5 @@
 # Sử dụng image chứa Python
-FROM python:3.11.7-alpine3.19
+FROM python:3.11-slim
 
 # Thiết lập thư mục làm việc
 WORKDIR /app

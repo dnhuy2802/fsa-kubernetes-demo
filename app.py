@@ -55,7 +55,9 @@ def main():
         for index, row in df.iterrows():
             # Tạo một khung cho mỗi người dùng
             with st.expander(f"Người dùng: {row['name']}"):
-                st.image(row['image'], width=100)
+                # st.image(row['image'], width=100)
+                img_user_link = f"{API_URL}/{row['image']}"
+                st.image(img_user_link, width=100)
                 st.write(f"ID: {row['id']}")
                 st.write(f"Email: {row['email']}")
 
