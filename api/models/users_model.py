@@ -9,7 +9,7 @@ class Users(BaseModel):
     # email_default = Form(..., description="Email of the user")
     # image = UploadFile
     # image_default = File(..., description="Image of the user")
-
+     
     name:str
     email:str
     image:str

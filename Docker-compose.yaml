@@ -3,23 +3,21 @@ version: "3.8"
 services:
   app:
     build: .
-    command: sh -c "uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
+    # command: sh -c "python main.py"
+    env_file:
+      - .env
     ports:
-      - 8000:8000
-    env_file: .env
+      - ${PUBLIC_PORT}:${PORT}
     depends_on:
       - db
-    environment: # phần này ta định nghĩa ở file .env nhé
-      - DB_HOST=${DB_HOST}
-      - DB_NAME=${DB_NAME}
-      - PORT=${PORT}
     volumes:
       - .:/code
+    restart: unless-stopped
 
   db:
     image: mongo:7.0.5
     ports:
-      - 27017:27017
+      - ${DB_PORT}:${DB_PORT}
     volumes:
       - mongodb_data:/data/db
     restart: unless-stopped
