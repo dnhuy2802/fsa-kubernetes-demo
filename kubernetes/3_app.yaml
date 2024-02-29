@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi-dep
+  labels:
+    app.kubernetes.io/name: fsa-kubernetes-demo
+spec:
+  selector:
+    matchLabels:
+      app: fastapi-dep
+  template:
+    metadata:
+      labels:
+        app: fastapi-dep
+    spec:
+      containers:
+      - name: fastapi-dep
+        image: asia-southeast1-docker.pkg.dev/fsa-k8s-demo-415714/fsa-be-k8s/fsa-be
+        env:
+          - name: PUBLIC_PORT
+            value: "8000"  # Replace with your desired port
+          - name: PORT
+            value: "8000"  # Replace with your FastAPI app's port
+          - name: DB_HOST
+            value: "mongo-0.mongo.default.svc.cluster.local"  # Corrected MongoDB service name
+          - name: DB_PORT
+            value: "27017"
+          - name: DB_NAME
+            value: "my_db"
+        ports:
+        - containerPort: 8000
+          name: http-fastapi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fastapi-service
+spec:
+  selector:
+    app: fastapi-dep
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8000
+      targetPort: http-fastapi
+  type: LoadBalancer
