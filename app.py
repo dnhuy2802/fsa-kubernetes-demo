@@ -14,6 +14,11 @@ def register_user(name, email, image):
     )
     return response.json()
 
+def delete_user(user_id):
+    # Gửi yêu cầu DELETE đến API để xóa người dùng
+    response = requests.delete(f"{API_URL}/users/{user_id}")
+    return response.json()
+
 def display_user_info(name, image):
     st.sidebar.title("Thông tin người dùng")
     st.sidebar.image(image, width=250)
@@ -50,7 +55,7 @@ def main():
     users = get_registered_users()
     df = pd.DataFrame(users)
 
-# Hiển thị dataframe trong một container
+    # Hiển thị dataframe trong một container
     with st.container():
         for index, row in df.iterrows():
             # Tạo một khung cho mỗi người dùng
@@ -60,7 +65,16 @@ def main():
                 st.image(img_user_link, width=100)
                 st.write(f"ID: {row['id']}")
                 st.write(f"Email: {row['email']}")
-
+        
+                # Thêm nút xóa tài khoản
+                if st.button(f"Xóa tài khoản {row['id']}"):
+                    delete_result = delete_user(row['id'])
+                    if "message" in delete_result:
+                        st.success(delete_result["message"])
+                        # Tải lại ứng dụng sau khi xóa tài khoản thành công
+                        st.experimental_rerun()
+                    else:
+                        st.error("Xóa tài khoản không thành công.")
 
 if __name__ == "__main__":
     main()
